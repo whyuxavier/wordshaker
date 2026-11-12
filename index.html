@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WordShaker 98</title>
+<meta name="description" content="Гра у слова на дошці 4×4 у стилі Windows 98. Українська та англійська.">
+<meta name="theme-color" content="#008080">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23008080'/%3E%3Crect x='2' y='2' width='28' height='7' fill='%23000080'/%3E%3Crect x='24' y='3' width='5' height='5' fill='%23c0c0c0'/%3E%3Crect x='4' y='11' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='14' y='11' width='8' height='8' fill='%23000080'/%3E%3Crect x='4' y='21' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='14' y='21' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='24' y='11' width='5' height='8' fill='%23e8e8e8'/%3E%3Crect x='24' y='21' width='5' height='8' fill='%23e8e8e8'/%3E%3Crect x='18' y='15' width='4' height='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="desktop" id="desktop">
+
+  <!-- ===== MAIN MENU ===== -->
+  <section class="window screen" id="scr-menu" data-screen="menu">
+    <div class="titlebar">
+      <span class="tb-icon"></span>
+      <span class="tb-title" data-i18n="app_name">WordShaker 98</span>
+      <span class="tb-btns">
+        <button class="tb-btn" id="btn-about" data-i18n-title="about" title="Про гру"><span class="ico-info">i</span></button>
+        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-min"></span></button>
+        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-max"></span></button>
+        <button class="tb-btn tb-close" tabindex="-1" aria-hidden="true"><span class="ico-x"></span></button>
+      </span>
+    </div>
+    <div class="menubar"><span data-i18n="mb_game">Гра</span><span data-i18n="mb_help">Довідка</span></div>
+    <div class="win-body menu-body">
+      <div class="menu-left">
+        <h1 class="logo"><span data-i18n="app_name">WordShaker 98</span></h1>
+        <p class="tagline" data-i18n="tagline">Знайди якомога більше слів на дошці 4×4 за три хвилини.</p>
+
+        <fieldset class="group">
+          <legend data-i18n="lang">Мова гри</legend>
+          <label class="radio"><input type="radio" name="lang" value="uk"><span class="rad"></span><span>Українська</span></label>
+          <label class="radio"><input type="radio" name="lang" value="en"><span class="rad"></span><span>English</span></label>
+        </fieldset>
+
+        <div class="menu-btns">
+          <button class="btn primary big" id="btn-play"><span class="pi pi-play"></span><span data-i18n="play">Грати</span></button>
+          <button class="btn" id="btn-how"><span class="pi pi-help"></span><span data-i18n="how">Як грати</span></button>
+          <button class="btn" id="btn-stats"><span class="pi pi-stats"></span><span data-i18n="stats">Статистика</span></button>
+        </div>
+        <label class="check"><input type="checkbox" id="chk-sound"><span class="box"></span><span data-i18n="sound">Звук</span></label>
+      </div>
+
+      <div class="menu-right">
+        <div class="hero" id="hero">
+          <svg class="hero-svg" viewBox="0 0 320 336" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="tbgrad" x1="0" x2="1"><stop offset="0" stop-color="#000080"/><stop offset="1" stop-color="#1084d0"/></linearGradient>
+            </defs>
+            <!-- window frame -->
+            <g class="h-win">
+              <rect x="22" y="30" width="276" height="296" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+              <rect x="24" y="32" width="272" height="292" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="26" y="34" width="268" height="288" fill="none" stroke="#808080" stroke-width="2"/>
+              <rect x="28" y="36" width="264" height="18" fill="url(#tbgrad)"/>
+              <rect x="32" y="40" width="10" height="10" fill="#c0c0c0"/><rect x="34" y="42" width="6" height="6" fill="#000080"/>
+              <text x="48" y="49" class="h-tbtext" id="hero-title">WordShaker 98</text>
+              <rect x="258" y="39" width="12" height="12" fill="#c0c0c0" stroke="#000"/><rect x="261" y="48" width="6" height="2" fill="#000"/>
+              <rect x="272" y="39" width="12" height="12" fill="#c0c0c0" stroke="#000"/><rect x="274" y="41" width="8" height="8" fill="none" stroke="#000" stroke-width="1.5"/>
+            </g>
+            <!-- timer + score panel -->
+            <g class="h-panel">
+              <rect x="34" y="60" width="86" height="22" fill="#000" stroke="#808080"/>
+              <text x="40" y="76" class="h-lcd">3:00</text>
+              <rect x="128" y="60" width="158" height="22" fill="#fff" stroke="#808080"/>
+              <text x="136" y="76" class="h-word" id="hero-word">СЛОВО</text>
+            </g>
+            <!-- path (under tiles: visible only in the gaps) -->
+            <polyline class="h-path" id="hero-path" fill="none" stroke="#000080" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" points=""/>
+            <!-- 4x4 tiles -->
+            <g class="h-grid" id="hero-grid"></g>
+          </svg>
+          <span class="badge badge-a">3:00</span>
+          <span class="badge badge-b">4×4</span>
+          <span class="badge badge-c"><span class="pi pi-star"></span><span id="hero-best">0</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="statusbar"><span class="sb-cell" id="menu-status" data-i18n="st_ready">Готово</span><span class="sb-cell sb-small" id="menu-lang">UA</span></div>
+  </section>
+
+  <!-- ===== HOW TO PLAY ===== -->
+  <section class="window screen dialog" id="scr-how" data-screen="how" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="how">Як грати</span>
+      <span class="tb-btns"><button class="tb-btn tb-close close-dialog"><span class="ico-x"></span></button></span></div>
+    <div class="win-body">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="rules" role="tab" data-i18n="tab_rules">Правила</button>
+        <button class="tab" data-tab="score" role="tab" data-i18n="tab_score">Бали</button>
+      </div>
+      <div class="tabpanel" id="tab-rules">
+        <ol class="rules" id="rules-list"></ol>
+        <svg class="dirs" viewBox="0 0 120 120" aria-hidden="true">
+          <g fill="#e8e8e8" stroke="#808080"><rect x="5" y="5" width="34" height="34"/><rect x="43" y="5" width="34" height="34"/><rect x="81" y="5" width="34" height="34"/><rect x="5" y="43" width="34" height="34"/><rect x="43" y="43" width="34" height="34" fill="#000080"/><rect x="81" y="43" width="34" height="34"/><rect x="5" y="81" width="34" height="34"/><rect x="43" y="81" width="34" height="34"/><rect x="81" y="81" width="34" height="34"/></g>
+          <g stroke="#000080" stroke-width="3" stroke-linecap="round"><line x1="60" y1="60" x2="60" y2="22"/><line x1="60" y1="60" x2="60" y2="98"/><line x1="60" y1="60" x2="22" y2="60"/><line x1="60" y1="60" x2="98" y2="60"/><line x1="60" y1="60" x2="22" y2="22"/><line x1="60" y1="60" x2="98" y2="22"/><line x1="60" y1="60" x2="22" y2="98"/><line x1="60" y1="60" x2="98" y2="98"/></g>
+          <circle cx="60" cy="60" r="7" fill="#fff" stroke="#000080" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="tabpanel" id="tab-score" hidden>
+        <table class="tbl" id="score-table"></table>
+        <p class="hint" data-i18n="score_hint">Чим довше слово, тим більше балів.</p>
+      </div>
+      <div class="dlg-btns"><button class="btn close-dialog" data-i18n="ok">OK</button></div>
+    </div>
+  </section>
+
+  <!-- ===== STATISTICS ===== -->
+  <section class="window screen dialog" id="scr-stats" data-screen="stats" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="stats">Статистика</span>
+      <span class="tb-btns"><button class="tb-btn tb-close close-dialog"><span class="ico-x"></span></button></span></div>
+    <div class="win-body">
+      <table class="tbl stats-tbl" id="stats-table"></table>
+      <div class="dlg-btns"><button class="btn close-dialog" data-i18n="ok">OK</button></div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT [i] ===== -->
+  <section class="window screen dialog" id="scr-about" data-screen="about" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="about">Про гру</span>
+      <span class="tb-btns"><button class="tb-btn tb-close close-dialog"><span class="ico-x"></span></button></span></div>
+    <div class="win-body about-body">
+      <p id="about-desc"></p>
+      <h3 data-i18n="controls">Керування</h3>
+      <ul id="about-controls"></ul>
+      <p class="small" id="about-dict"></p>
+      <p><a class="gh" href="https://github.com/whyuxavier/wordshaker" target="_blank" rel="noopener"><span class="pi pi-star"></span> GitHub</a></p>
+      <div class="dlg-btns"><button class="btn close-dialog" data-i18n="ok">OK</button></div>
+    </div>
+  </section>
+
+  <!-- ===== GAME ===== -->
+  <section class="window screen" id="scr-game" data-screen="game" hidden>
+    <div class="titlebar">
+      <span class="tb-icon"></span>
+      <span class="tb-title"><span data-i18n="app_name">WordShaker 98</span> — <span id="game-lang-title">UA</span></span>
+      <span class="tb-btns">
+        <button class="tb-btn" id="btn-about2" data-i18n-title="about" title="Про гру"><span class="ico-info">i</span></button>
+        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-min"></span></button>
+        <button class="tb-btn tb-close" id="btn-game-close" data-i18n-title="to_menu" title="У меню"><span class="ico-x"></span></button>
+      </span>
+    </div>
+    <div class="toolbar">
+      <span class="lcd" id="hud-time">3:00</span>
+      <span class="hud"><span class="hud-l" data-i18n="score">Бали</span><span class="hud-v" id="hud-score">0</span></span>
+      <span class="hud"><span class="hud-l" data-i18n="words">Слова</span><span class="hud-v" id="hud-words">0</span></span>
+      <span class="spacer"></span>
+      <span class="hud-lang" id="hud-lang">UA</span>
+      <button class="btn icon" id="btn-sound" data-i18n-title="sound" title="Звук"><span class="pi pi-snd"></span></button>
+      <button class="btn icon" id="btn-pause" data-i18n-title="pause" title="Пауза"><span class="pi pi-pause"></span></button>
+    </div>
+    <div class="win-body game-body">
+      <div class="game-left">
+        <div class="word-field" id="word-field"><span id="cur-word"></span><span class="caret"></span></div>
+        <div class="grid-wrap" id="grid-wrap">
+          <div class="grid" id="grid"></div>
+          <svg class="path-svg" id="path-svg" aria-hidden="true"><polyline id="path-line" fill="none" stroke-linejoin="round" stroke-linecap="round" points=""/></svg>
+        </div>
+        <div class="word-btns">
+          <button class="btn" id="btn-clear"><span class="pi pi-clear"></span><span data-i18n="clear">Очистити</span></button>
+          <button class="btn primary" id="btn-submit"><span class="pi pi-ok"></span><span data-i18n="submit">Готово</span></button>
+        </div>
+      </div>
+      <div class="game-right">
+        <div class="list-head"><span data-i18n="found">Знайдені слова</span></div>
+        <ul class="listbox" id="found-list"></ul>
+      </div>
+    </div>
+    <div class="statusbar"><span class="sb-cell" id="game-status"></span></div>
+  </section>
+
+  <!-- ===== PAUSE ===== -->
+  <section class="window screen dialog small" id="scr-pause" data-screen="pause" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="pause">Пауза</span></div>
+    <div class="win-body pause-body">
+      <div class="pause-ico"><span class="pi pi-pause big"></span></div>
+      <div class="dlg-col">
+        <button class="btn primary" id="btn-resume"><span class="pi pi-play"></span><span data-i18n="resume">Продовжити</span></button>
+        <button class="btn" id="btn-restart"><span class="pi pi-restart"></span><span data-i18n="restart">Заново</span></button>
+        <button class="btn" id="btn-pause-menu"><span class="pi pi-menu"></span><span data-i18n="to_menu">У меню</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="window screen dialog" id="scr-results" data-screen="results" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="times_up">Час вийшов!</span></div>
+    <div class="win-body results-body">
+      <div class="res-top">
+        <div class="res-score"><span class="res-num" id="res-score">0</span><span class="res-lbl" data-i18n="score">Бали</span></div>
+        <div class="res-cells">
+          <div><span class="res-lbl" data-i18n="words">Слова</span><b id="res-words">0</b></div>
+          <div><span class="res-lbl" data-i18n="longest">Найдовше</span><b id="res-longest">—</b></div>
+          <div><span class="res-lbl" data-i18n="best">Рекорд</span><b id="res-best">0</b></div>
+        </div>
+      </div>
+      <div class="res-new" id="res-new" hidden data-i18n="new_best">Новий рекорд!</div>
+      <div class="res-groups listbox" id="res-groups"></div>
+      <div class="dlg-btns">
+        <button class="btn primary" id="btn-again"><span class="pi pi-restart"></span><span data-i18n="again">Ще раз</span></button>
+        <button class="btn" id="btn-res-menu"><span class="pi pi-menu"></span><span data-i18n="to_menu">У меню</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOADING ===== -->
+  <section class="window screen dialog small" id="scr-loading" data-screen="loading" hidden>
+    <div class="titlebar"><span class="tb-icon"></span><span class="tb-title" data-i18n="loading">Завантаження словника…</span></div>
+    <div class="win-body"><div class="progress"><div class="progress-bar"></div></div></div>
+  </section>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <div class="taskbar">
+    <button class="btn start" id="btn-start"><span class="start-logo"></span><span data-i18n="app_name">WordShaker 98</span></button>
+    <span class="task-sep"></span>
+    <span class="task-btn" id="task-cur"></span>
+    <span class="spacer"></span>
+    <span class="tray"><span class="pi pi-snd-tray" id="tray-snd"></span><span id="clock">00:00</span></span>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

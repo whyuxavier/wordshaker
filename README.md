@@ -1,0 +1,7 @@
+# WordShaker 98
+
+Гра у слова на дошці 4×4 у стилі Windows 98 — українська та англійська.
+
+**Структура:** `index.html`, `style.css`, `game.js`, `sw.js`, `manifest.json`, `icon.svg`, `dict-uk.txt`, `dict-en.txt` — усе в корені репозиторію. Увімкніть GitHub Pages для гілки `main`, і гра запрацює (також офлайн після першого відкриття).
+
+**Словники:** українська — [ВЕСУМ](https://github.com/brown-uk/dict_uk) (CC BY-NC-SA 4.0), англійська — ENABLE (public domain). Слова 3–7 літер без власних назв, скорочень і дефісів.
