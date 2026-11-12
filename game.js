@@ -11,8 +11,9 @@ const CONFIG = {
   MIN_LEN: 3,
   MAX_LEN: 7,
   POINTS: { 3: 1, 4: 2, 5: 3, 6: 4, 7: 5 },
-  MIN_WORDS: { uk: 35, en: 45 },     // board quality threshold
-  GEN_TRIES: 40,
+  MIN_WORDS: { uk: 40, en: 45 },     // board quality: all dictionary words
+  MIN_COMMON: { uk: 10, en: 14 },     // board quality: everyday words from COMMON
+  GEN_TRIES: 60,
   DICT_FILE: { uk: 'dict-uk.txt', en: 'dict-en.txt' },
   GITHUB: 'https://github.com/whyuxavier/wordshaker',
   STORAGE_KEY: 'wordshaker98'
@@ -32,12 +33,12 @@ const T = {
     st_error: 'Не вдалося завантажити словник',
     tab_rules: 'Правила', tab_score: 'Бали',
     rules: [
-      'На дошці 16 випадкових літер. Складай слова, з’єднуючи сусідні літери.',
+      'На дошці 16 літер, серед яких завжди сховано щонайменше 10 звичних слів. Складай слова, з’єднуючи сусідні літери.',
       'Сусідні — по горизонталі, вертикалі та діагоналі.',
       'Кожну плитку можна використати лише раз в одному слові.',
       'Слово має містити від 3 до 7 літер і бути у словнику.',
       'Те саме слово двічі не зараховується. Власні назви, скорочення й слова через дефіс не приймаються.',
-      'Раунд триває 3 хвилини. Чим довше слово — тим більше балів.'
+      'Раунд триває 3 хвилини. Чим довше слово — тим більше балів. Після раунду гра покаже, які слова ти пропустив.'
     ],
     len: 'Довжина слова', pts: 'Бали', letters_n: '{n} літер', letters_3: '3 літери', letters_4: '4 літери',
     score_hint: 'Чим довше слово, тим більше балів.',
@@ -47,7 +48,7 @@ const T = {
     msg_ok: '«{w}» +{n}', msg_short: 'Замало літер — мінімум 3', msg_long: 'Забагато літер — максимум 7',
     msg_nodict: '«{w}» — немає у словнику', msg_dup: '«{w}» вже знайдено',
     times_up: 'Час вийшов!', longest: 'Найдовше', best: 'Рекорд', new_best: 'Новий рекорд!', again: 'Ще раз',
-    no_words: 'Жодного слова', loading: 'Завантаження словника…',
+    missed: 'Можна було скласти', no_words: 'Жодного слова', loading: 'Завантаження словника…',
     s_lang: 'Мова', s_games: 'Ігор зіграно', s_best: 'Рекорд', s_words: 'Слів знайдено', s_longest: 'Найдовше слово',
     controls: 'Керування',
     about_desc: 'Гра у слова в стилі старих настільних програм. На дошці 4×4 — випадкові літери; за 3 хвилини склади якнайбільше слів, з’єднуючи сусідні плитки. Українська та англійська — окремі режими зі своїми словниками.',
@@ -67,12 +68,12 @@ const T = {
     st_error: 'Could not load the dictionary',
     tab_rules: 'Rules', tab_score: 'Scoring',
     rules: [
-      'The board has 16 random letters. Build words by connecting adjacent tiles.',
+      'The board has 16 letters that always hide at least 14 everyday words. Build words by connecting adjacent tiles.',
       'Adjacent means horizontally, vertically or diagonally.',
       'Each tile can be used only once in a word.',
       'Words must be 3 to 7 letters long and present in the dictionary.',
       'The same word does not count twice. Proper names, abbreviations and hyphenated words are not accepted.',
-      'A round lasts 3 minutes. Longer words earn more points.'
+      'A round lasts 3 minutes. Longer words earn more points. After the round you will see the words you missed.'
     ],
     len: 'Word length', pts: 'Points', letters_n: '{n} letters', letters_3: '3 letters', letters_4: '4 letters',
     score_hint: 'The longer the word, the more points.',
@@ -82,7 +83,7 @@ const T = {
     msg_ok: '“{w}” +{n}', msg_short: 'Too short — at least 3 letters', msg_long: 'Too long — at most 7 letters',
     msg_nodict: '“{w}” is not in the dictionary', msg_dup: '“{w}” already found',
     times_up: "Time's up!", longest: 'Longest', best: 'Best', new_best: 'New personal best!', again: 'Play again',
-    no_words: 'No words', loading: 'Loading dictionary…',
+    missed: 'You could have found', no_words: 'No words', loading: 'Loading dictionary…',
     s_lang: 'Language', s_games: 'Games played', s_best: 'Best score', s_words: 'Words found', s_longest: 'Longest word',
     controls: 'Controls',
     about_desc: 'A word game styled like a late-90s desktop app. The 4×4 board shows random letters; you have 3 minutes to build as many words as possible by connecting adjacent tiles. Ukrainian and English are separate modes with their own dictionaries.',
@@ -199,6 +200,90 @@ const LETTERS = {
   setWeights(lang, weights) { this[lang].weights = weights; delete this._table[lang]; }
 };
 
+/* ---------------- COMMON WORDS ----------------
+   Everyday words (all present in the dictionaries). The generator plants several of
+   them on the board and rates boards by how many of them can be found, so a player
+   always has real, familiar words to discover — not only rare word forms. */
+const COMMON = {
+  uk: (
+    'бал бик бук біб бік бір вік віл газ гай гра дах два дим дощ дуб дід дім жук зад зуб йти кит куб кут кущ кіт ' +
+    'лев лин лис лоб луг лід ліс мак мед мир мох низ ніж ніс ніч око оса пан пес піч раз рак рис рот ріг рік сад ' +
+    'син сир сом сон сто суп сік сім тин тон три тік хол хор цар чай час чиж шия щур іти авто баба бити борщ брат ' +
+    'буря бути ваза вата вежа верх вити вовк вода воля вухо віра вірш гора горб граб град гриб грім дати дача двір ' +
+    'день диня доба друг жаба жара жити жито зала звук зима злий змія зоря кава кадр каша клас клен ключ коза коло ' +
+    'кора коса краб край крик кров круг кріт куля куща кіно кінь лава липа лист лити лось лоша луки люди літо ліфт ' +
+    'мама мапа мати маяк межа мета мило мити мить миша млин мова море морж мрія мука муха мідь міст небо нива нога ' +
+    'нота нуль обід овес овоч один олія онук орел пава пані парк пити плач плюс пляж поле пояс птах риба рись рити ' +
+    'ритм рожа роза роль роса рука ріка сало село сенс сила скло слон смак сміх сніг сова став степ стіл сума схід ' +
+    'сіль тато теля тигр торт тхір тіло урок фото хата хліб хлів храм цирк чути шарф шафа шити шлях шовк шпак щука ' +
+    'юнга ягня яйце якір ідея іній їжак їсти актор акула аґрус балка банан банка баран башта берег бобер брати ' +
+    'брова бузок буква булка буряк бусол бігти білий білка вагон везти верба весна вечір видра вишня вміти вовна ' +
+    'водій волос вулик вівця відро вікно віник вісім вітер гараж глина голка голос голуб гопак горох горіх граки ' +
+    'грати груди груша гусак гуска гілка гість декан дзвін дошка дубок думка дятел живіт жираф залік замок запах ' +
+    'захід заєць зебра земля зерно знати зошит зірка кавун кажан казан казка какао калач карта качка кермо кефір ' +
+    'килим книга коала кобза колір комар короп кошик кубик курка кухар кухня кучер кішка лампа ласка лимон листя ' +
+    'ложка любов лягти ліжко лікар лінія літак мавпа малий масло метал милий миска мишка могти мороз моряк мотор ' +
+    'музей мідія мінус місто мішок надія намет народ наука нести нитка новий норка носок озеро окунь олень осока ' +
+    'осінь павич палац панда папір парта пекар пекти пенал перед пилка пиріг плече плита площа полин попіл поріг ' +
+    'потяг похід поїзд право принц пілот пісня пісок радіо рамка ранок рибак рости рудий ручка річка салат сарай ' +
+    'свиня свято серце синій сквер слива слово смола сокіл сонце сонях сосна спати спина стіна сукня сумка сусід ' +
+    'сухий сходи сцена сірий сісти табір таксі театр тепло тихий томат торба точка трава труба туман туфлі тітка ' +
+    'узвар учень фарба форма фільм хвиля хмара холод хрест хутір хімія центр цифра цукор цуцик чабан чапля чашка ' +
+    'числа човен шапка шишка школа шкіра шофер шість щастя щогла щітка ягода ялина індик іспит бабуся балкон бачити ' +
+    'бджола береза бублик важкий варити вершки взуття вогонь ворона встати вулиця вітряк гарбуз гарний глечик ' +
+    'глобус глядач година голова горище горщик гучний гіркий гітара дерево десять диплом дитина добрий довгий ' +
+    'донька дорога другий думати дядько дідусь жасмин жовтий жолудь задача зайчик залізо затока знайти знімок ' +
+    'зозуля золото йогурт кавуна казати калина камінь карась квиток квітка кидати кислий класти коваль колесо ' +
+    'коліно комора компас компот копати корова король корінь кошара кошеня крейда куртка кухоль кістка лебідь ' +
+    'легкий лежати лекція лелека летіти лисиця листок ловити лопата любити лялька лікоть лісник літера ліхтар ' +
+    'малина матрос машина мокрий молоко морква мураха місяць неділя ніготь огірок оливка острів оцінка очерет ' +
+    'палець пальто папуга паркан пастух пасіка перець персик перший пилити писати питати пливти плисти пляшка ' +
+    'поверх полиця порося правда півень північ підвал равлик ракета ранець ректор робити рубати рушник рюкзак ' +
+    'садити свічка середа сестра сидіти синиця скриня снігур собака соболь сокира солдат сорока срібло старий ' +
+    'сторож стояти страус субота сумний суниця сірник танець теплий тераса тисяча тополя турист тюлень флейта ' +
+    'фізика хазяїн ховрах хотіти цвісти церква цибуля чайник часник чекати четвер чистий читати чоботи чорний ' +
+    'чотири школяр шукати яблуко ялинка яструб ґудзик абрикос автобус алгебра бандура барабан брудний вареник ' +
+    'ведмідь великий верблюд веселий виделка високий вогнище вчитель вітрило горлиця гребінь дельфін діброва ' +
+    'дівчина зелений капуста капітан картина квадрат квасоля кенгуру ковбаса коробка коровай котлета кравець ' +
+    'криниця кропива кімната лисичка малюнок млинець молодий молоток низький олівець опеньок оркестр пензель ' +
+    'пиріжок писанка плакати подруга приклад пшениця південь пінгвін радість рибалка ромашка різниця сильний ' +
+    'сказати скрипка слабкий смачний смерека сметана соловей солоний сопілка сорочка співати стовбур студент ' +
+    'стілець тарілка телефон тиждень трамвай тюльпан учитель фортеця хвилина хлопець цукерка швидкий іграшка ' +
+    'історія'
+  ).split(' '),
+  en: (
+    'ace act add age ago aim air all and ant any ape ark arm art ash ask ate awe axe bad bag ban bat bay bed bee ' +
+    'beg bet big bin bit box boy bug bun bus but can cap car cat cop cow coy cup cut dad dam day den dig dim dip ' +
+    'dog dot dry dug ear eat egg elf elk emu end eye fan fat fig fin fit fox fun gas get got gun gut ham hat hay ' +
+    'hen him hip hit hop hot hug hut ice ill ink jam jet jig joy jug keg key kin kit lag lay leg let lip lit lot ' +
+    'man map mat may men met mom mop mud mug nag net new not nun nut oak oat oil old one owl pan pat pay pea peg ' +
+    'pen pet pie pig pin pit pop pot rag ram ran rat ray red rim rip rod rot rug run rut sad sag sat say sea set ' +
+    'sin sip sit six sky son soy sum sun tag tan tea ten tin tip toe top toy tug two van vat vet wag way web wet ' +
+    'wig win wit yam yet zip aunt baby back ball bank beam bean bear beat bell belt best bike bird blue boat boil ' +
+    'bone book boot bowl bulb bush cake calm camp card cave city clan clay coal coat code coil coin cold cook corn ' +
+    'crop dark data date dawn deal dear deep deer dent desk dice disk doll door drop drum duck dust east exam face ' +
+    'farm fast fear feat feed fire fish five flat foil foot fork four free frog gain game gate gear girl goal goat ' +
+    'gold good gray hair hand hard hate head heal hear heat heel hero hill home hook hope horn hour iron join jump ' +
+    'keep kind king kite knee lake lamp late leaf left lent life lily lime line lion lock long loud love mail main ' +
+    'mate meal meat milk moon nail near neat neck need nest nice nine noon nose note page pail pain park path pear ' +
+    'peel pink plan play plum plus pond rail rain rate read real reed rent rest rice ring road rock roof room root ' +
+    'rope rose sail salt sand scan seal seat seed sent ship shoe shop silk sing site skin slow snow sock sofa soft ' +
+    'soil song soup sour star stem step stop swim tail tale talk tall team tear tent test tide time toil town tree ' +
+    'vain walk wall warm wave wear weed week west wind wolf wood wool word year zero actor angry apple baker beach ' +
+    'black blood brain brave bread brown chain chair chalk chess class clock cloth cloud coast color cream dance ' +
+    'dream dress drink earth eight faint funny glass glove grade grain grape grass green happy heart honey house ' +
+    'joint juice knife lemon light mango melon month mouse mouth movie music night noise north nurse ocean olive ' +
+    'onion paint paper peach phone photo piano pilot plane plant plate point pupil queen quiet radio rider right ' +
+    'river robot round ruler saint scarf seven shape sheep shirt shore short sleep small smart smoke south spent ' +
+    'spoil spoon stain start state steal steam steel stone storm sugar sweet table three tooth tower train truck ' +
+    'uncle voice watch water wheel white woman write artist bridge butter carrot castle cheese choice coffee doctor ' +
+    'driver farmer flower forest friend garlic guitar island lesson letter pencil pepper player potato prince ' +
+    'puzzle reader runner sailor school screen singer tomato winner writer fishing painter student teacher'
+  ).split(' '),
+  _set: {},
+  set(lang) { return this._set[lang] || (this._set[lang] = new Set(this[lang])); }
+};
+
 /* ---------------- SOUND ---------------- */
 const Sound = {
   ctx: null, on: false,
@@ -241,19 +326,54 @@ const Board = {
     const ra = (a / 4) | 0, ca = a % 4, rb = (b / 4) | 0, cb = b % 4;
     return a !== b && Math.abs(ra - rb) <= 1 && Math.abs(ca - cb) <= 1;
   },
-  randomLetters(lang) {
-    const L = LETTERS[lang];
-    for (let tries = 0; tries < 50; tries++) {
-      const arr = Array.from({ length: 16 }, () => LETTERS.random(lang));
-      const v = arr.filter(ch => L.vowels.includes(ch)).length;
-      const counts = {}; let maxRep = 0;
-      for (const ch of arr) { counts[ch] = (counts[ch] || 0) + 1; maxRep = Math.max(maxRep, counts[ch]); }
-      if (v >= 5 && v <= 9 && maxRep <= 3) return arr;
+  // random self-avoiding path for `word`; may reuse a cell that already holds the same letter
+  plantWord(cells, word) {
+    const tryFrom = (i, k, used) => {
+      if (used.includes(i)) return null;
+      if (cells[i] && cells[i] !== word[k]) return null;
+      const next = used.concat(i);
+      if (k === word.length - 1) return next;
+      const ns = this.neighbors(i).sort(() => Math.random() - .5);
+      for (const n of ns) { const r = tryFrom(n, k + 1, next); if (r) return r; }
+      return null;
+    };
+    const starts = [...Array(16).keys()].sort(() => Math.random() - .5);
+    for (const s of starts) {
+      const path = tryFrom(s, 0, []);
+      if (path) { path.forEach((c, k) => { cells[c] = word[k]; }); return true; }
     }
-    return Array.from({ length: 16 }, () => LETTERS.random(lang));
+    return false;
   },
-  // count distinct dictionary words on a board (capped for speed)
-  countWords(letters, lang, cap = 400) {
+  pick(list, minLen, maxLen) {
+    const pool = list.filter(w => w.length >= minLen && w.length <= maxLen);
+    return pool[(Math.random() * pool.length) | 0];
+  },
+  // plant 3–4 everyday words, then fill the gaps with frequent letters
+  seededLetters(lang) {
+    const L = LETTERS[lang], list = COMMON[lang], cells = new Array(16).fill(null);
+    const plan = [[5, 6], [4, 5], [3, 4], [3, 4], [3, 5]];
+    for (const [a, b] of plan) {
+      if (cells.filter(Boolean).length >= 12) break;
+      for (let k = 0; k < 6; k++) { if (this.plantWord(cells, this.pick(list, a, b))) break; }
+    }
+    // fill empty cells, keeping a sane vowel balance (5–8 vowels on the board)
+    for (let i = 0; i < 16; i++) if (!cells[i]) {
+      const v = cells.filter(ch => ch && L.vowels.includes(ch)).length;
+      let ch;
+      for (let k = 0; k < 20; k++) {
+        ch = LETTERS.random(lang);
+        const isV = L.vowels.includes(ch);
+        if (v >= 8 && isV) continue;
+        if (v < 5 && !isV && Math.random() < .6) continue;
+        if (cells.filter(c => c === ch).length >= 2) continue;
+        break;
+      }
+      cells[i] = ch;
+    }
+    return cells;
+  },
+  // all distinct dictionary words on a board (capped for speed)
+  findWords(letters, lang, cap = 600) {
     const found = new Set(), used = new Array(16).fill(false);
     const dfs = (i, prefix) => {
       if (found.size >= cap) return;
@@ -266,17 +386,27 @@ const Board = {
       used[i] = false;
     };
     for (let i = 0; i < 16; i++) dfs(i, '');
-    return found.size;
+    return found;
+  },
+  countWords(letters, lang) { return this.findWords(letters, lang).size; },
+  rate(letters, lang) {
+    const all = this.findWords(letters, lang), cs = COMMON.set(lang);
+    const common = [...all].filter(w => cs.has(w));
+    const long = common.filter(w => w.length >= 5).length;
+    return { letters, all, common, count: all.size,
+      score: common.length * 4 + long * 6 + Math.min(all.size, 120) / 6 };
   },
   generate(lang) {
     let best = null;
+    const t0 = Date.now();
     for (let tr = 0; tr < CONFIG.GEN_TRIES; tr++) {
-      const letters = this.randomLetters(lang);
-      const n = this.countWords(letters, lang);
-      if (!best || n > best.count) best = { letters, count: n };
-      if (n >= CONFIG.MIN_WORDS[lang]) break;
+      const r = this.rate(this.seededLetters(lang), lang);
+      if (!best || r.score > best.score) best = r;
+      const good = best.common.length >= CONFIG.MIN_COMMON[lang] && best.count >= CONFIG.MIN_WORDS[lang];
+      if ((good && tr >= 5) || Date.now() - t0 > 600) break;
     }
-    this.letters = best.letters; this.lang = lang; this.count = best.count; this.ready = false;
+    this.letters = best.letters; this.lang = lang; this.count = best.count;
+    this.all = best.all; this.common = best.common; this.ready = false;
     return best;
   }
 };
@@ -396,6 +526,7 @@ const UI = {
     $('chk-sound').checked = on;
     document.body.classList.toggle('snd-off', !on);
     $('tray-snd').classList.toggle('off', !on);
+    $('btn-sound').setAttribute('aria-pressed', String(on));
   },
   status(msg, cls) {
     const el = $('game-status'); el.textContent = msg; el.className = 'sb-cell' + (cls ? ' toast ' + cls : '');
@@ -500,7 +631,8 @@ const UI = {
     $('res-best').textContent = STORAGE.data.stats[Game.lang].best;
     $('res-new').hidden = !newBest;
     const box = $('res-groups'); box.innerHTML = '';
-    if (!Game.words.length) { box.innerHTML = `<div class="empty" style="text-align:center;padding:20px;color:#666">${t('no_words')}</div>`; return; }
+    this.renderMissed(box);
+    if (!Game.words.length) { box.insertAdjacentHTML('afterbegin', `<li class="empty">${t('no_words')}</li>`); return; }
     const groups = {};
     for (const w of Game.words) (groups[w.length] = groups[w.length] || []).push(w);
     const lens = Object.keys(groups).map(Number).sort((a, b) => b - a);
@@ -509,8 +641,19 @@ const UI = {
       g.textContent = `${this.lettersLabel(n)} — ${groups[n].length} × ${CONFIG.POINTS[n]}`;
       const ws = document.createElement('div'); ws.className = 'words';
       ws.textContent = groups[n].sort().join('  ·  ');
-      box.appendChild(g); box.appendChild(ws);
+      box.insertBefore(ws, box.querySelector('.missed'));
+      box.insertBefore(g, ws);
     }
+  },
+  // everyday words that were on the board but not found
+  renderMissed(box) {
+    const missed = (Board.common || []).filter(w => !Game.wordSet.has(w))
+      .sort((a, b) => b.length - a.length || a.localeCompare(b)).slice(0, 12);
+    if (!missed.length) return;
+    const g = document.createElement('li'); g.className = 'group missed'; g.textContent = t('missed');
+    const ws = document.createElement('div'); ws.className = 'words missed-words';
+    ws.textContent = missed.join('  ·  ');
+    box.appendChild(g); box.appendChild(ws);
   }
 };
 
@@ -766,4 +909,4 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // exposed for tests
-window.WS = { CONFIG, DICT, Board, Game, Round, UI, Input, LETTERS };
+window.WS = { CONFIG, DICT, Board, Game, Round, UI, Input, LETTERS, COMMON };

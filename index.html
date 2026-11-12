@@ -40,7 +40,7 @@
 
         <div class="menu-btns">
           <button class="btn primary big" id="btn-play"><span class="pi pi-play"></span><span data-i18n="play">Грати</span></button>
-          <button class="btn" id="btn-how"><span class="pi pi-help"></span><span data-i18n="how">Як грати</span></button>
+          <button class="btn" id="btn-how"><svg class="pi" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="#000080"/><path d="M4.2 4.6a1.8 1.8 0 1 1 2.6 1.6c-.6.3-.8.6-.8 1.2" fill="none" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="8.4" width="1.4" height="1.4" fill="#fff"/></svg><span data-i18n="how">Як грати</span></button>
           <button class="btn" id="btn-stats"><span class="pi pi-stats"></span><span data-i18n="stats">Статистика</span></button>
         </div>
         <label class="check"><input type="checkbox" id="chk-sound"><span class="box"></span><span data-i18n="sound">Звук</span></label>
@@ -48,15 +48,15 @@
 
       <div class="menu-right">
         <div class="hero" id="hero">
-          <svg class="hero-svg" viewBox="0 0 320 336" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg class="hero-svg" viewBox="0 0 320 348" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="tbgrad" x1="0" x2="1"><stop offset="0" stop-color="#000080"/><stop offset="1" stop-color="#1084d0"/></linearGradient>
             </defs>
             <!-- window frame -->
             <g class="h-win">
-              <rect x="22" y="30" width="276" height="296" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
-              <rect x="24" y="32" width="272" height="292" fill="none" stroke="#fff" stroke-width="2"/>
-              <rect x="26" y="34" width="268" height="288" fill="none" stroke="#808080" stroke-width="2"/>
+              <rect x="22" y="30" width="276" height="310" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+              <rect x="24" y="32" width="272" height="306" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="26" y="34" width="268" height="302" fill="none" stroke="#808080" stroke-width="2"/>
               <rect x="28" y="36" width="264" height="18" fill="url(#tbgrad)"/>
               <rect x="32" y="40" width="10" height="10" fill="#c0c0c0"/><rect x="34" y="42" width="6" height="6" fill="#000080"/>
               <text x="48" y="49" class="h-tbtext" id="hero-title">WordShaker 98</text>
@@ -150,7 +150,7 @@
       <span class="hud"><span class="hud-l" data-i18n="words">Слова</span><span class="hud-v" id="hud-words">0</span></span>
       <span class="spacer"></span>
       <span class="hud-lang" id="hud-lang">UA</span>
-      <button class="btn icon" id="btn-sound" data-i18n-title="sound" title="Звук"><span class="pi pi-snd"></span></button>
+      <button class="btn icon" id="btn-sound" data-i18n-title="sound" title="Звук" aria-pressed="false"><svg class="ico-snd" viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M2 7h4l5-4v14l-5-4H2z"/><path class="wave" d="M13.5 7.5q1.5 2.5 0 5M15.5 5q3 5 0 10" fill="none" stroke-width="2" stroke-linecap="square"/><path class="mute" d="M13 7l6 6M19 7l-6 6" fill="none" stroke-width="2.4" stroke-linecap="square"/></svg></button>
       <button class="btn icon" id="btn-pause" data-i18n-title="pause" title="Пауза"><span class="pi pi-pause"></span></button>
     </div>
     <div class="win-body game-body">
@@ -220,7 +220,7 @@
     <span class="task-sep"></span>
     <span class="task-btn" id="task-cur"></span>
     <span class="spacer"></span>
-    <span class="tray"><span class="pi pi-snd-tray" id="tray-snd"></span><span id="clock">00:00</span></span>
+    <span class="tray"><span class="tray-snd" id="tray-snd"><svg class="ico-snd" viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M2 7h4l5-4v14l-5-4H2z"/><path class="wave" d="M13.5 7.5q1.5 2.5 0 5M15.5 5q3 5 0 10" fill="none" stroke-width="2" stroke-linecap="square"/><path class="mute" d="M13 7l6 6M19 7l-6 6" fill="none" stroke-width="2.4" stroke-linecap="square"/></svg></span><span id="clock">00:00</span></span>
   </div>
 </div>
 <script src="game.js"></script>
