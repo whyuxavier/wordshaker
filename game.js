@@ -36,7 +36,7 @@ const T = {
       'На дошці 16 літер, серед яких завжди сховано щонайменше 10 звичних слів. Складай слова, з’єднуючи сусідні літери.',
       'Сусідні — по горизонталі, вертикалі та діагоналі.',
       'Кожну плитку можна використати лише раз в одному слові.',
-      'Слово має містити від 3 до 7 літер і бути у словнику.',
+      'Слово має містити від 3 до 7 літер і бути у словнику в початковій формі: «липа», «кіт», «читати» — так; «лип», «кота», «читав» — ні.',
       'Те саме слово двічі не зараховується. Власні назви, скорочення й слова через дефіс не приймаються.',
       'Раунд триває 3 хвилини. Чим довше слово — тим більше балів. Після раунду гра покаже, які слова ти пропустив.'
     ],
@@ -57,7 +57,7 @@ const T = {
       'Сенсор: так само пальцем; або торкайся плиток по одній, а потім «Готово» чи ще раз остання плитка.',
       'Клавіатура: Backspace — прибрати останню літеру, Enter — здати слово, Esc — пауза.'
     ],
-    about_dict: 'Словники: ВЕСУМ (brown-uk/dict_uk, CC BY-NC-SA 4.0) та ENABLE (public domain). Працює офлайн.'
+    about_dict: 'Словники: ВЕСУМ (brown-uk/dict_uk, CC BY-NC-SA 4.0; лише початкові форми слів) та ENABLE (public domain). Працює офлайн.'
   },
   en: {
     app_name: 'WordShaker 98',
@@ -92,7 +92,7 @@ const T = {
       'Touch: the same with a finger; or tap tiles one by one, then “Submit” or tap the last tile again.',
       'Keyboard: Backspace removes the last letter, Enter submits, Esc pauses.'
     ],
-    about_dict: 'Dictionaries: VESUM (brown-uk/dict_uk, CC BY-NC-SA 4.0) and ENABLE (public domain). Works offline.'
+    about_dict: 'Dictionaries: VESUM (brown-uk/dict_uk, CC BY-NC-SA 4.0; base forms only) and ENABLE (public domain). Works offline.'
   }
 };
 const LANG_NAME = { uk: 'Українська', en: 'English' };
