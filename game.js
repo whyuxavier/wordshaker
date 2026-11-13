@@ -477,7 +477,8 @@ const UI = {
     const ul = $('about-controls'); ul.innerHTML = '';
     for (const c of t('about_controls')) { const li = document.createElement('li'); li.textContent = c; ul.appendChild(li); }
     $('about-dict').textContent = t('about_dict');
-    $('hero-best').textContent = STORAGE.data.stats[UI_LANG].best;
+    const heroBest = $('hero-best');   // optional badge — may be removed from the markup
+    if (heroBest) heroBest.textContent = STORAGE.data.stats[UI_LANG].best;
     this.renderHero();
     this.renderStats();
   },
@@ -885,7 +886,6 @@ function init() {
   $('btn-again').addEventListener('click', () => { Sound.click(); closeDialogs(); Round.start(Game.lang); });
   $('btn-res-menu').addEventListener('click', toMenu);
   $('btn-start').addEventListener('click', () => { Sound.click(); if (UI.cur === 'game' && Game.running) Round.pause(); else if (UI.cur !== 'game') UI.dialog('about', true); });
-  $('hero').addEventListener('animationend', () => { /* last badge ends ~1.8s+ */ }, { once: true });
 
   document.addEventListener('visibilitychange', () => { if (document.hidden) Round.pause(); });
   window.addEventListener('blur', () => Round.pause());

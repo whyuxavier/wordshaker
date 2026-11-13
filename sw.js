@@ -1,5 +1,5 @@
 /* WordShaker 98 — service worker: precache everything, serve cache-first */
-const CACHE = 'wordshaker98-v3';
+const CACHE = 'wordshaker98-v4';
 const FILES = ['./', 'index.html', 'style.css', 'game.js', 'manifest.json', 'icon.svg', 'dict-uk.txt', 'dict-en.txt'];
 
 self.addEventListener('install', e => {
