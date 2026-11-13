@@ -1,5 +1,5 @@
 /* ================================================================
-   WordShaker 98 — word game on a 4×4 board (uk / en)
+   WordShaker — word game on a 4×4 board (uk / en)
    Sections: CONFIG · I18N · STORAGE · DICT · LETTERS · SOUND ·
              BOARD · INPUT · GAME · UI · INIT
    ================================================================ */
@@ -25,7 +25,8 @@ if (_q.get('time')) CONFIG.ROUND_SEC = Math.max(3, parseInt(_q.get('time'), 10) 
 /* ---------------- I18N ---------------- */
 const T = {
   uk: {
-    app_name: 'WordShaker 98',
+    app_name: 'WordShaker',
+    kicker: '// гра у слова · 4×4 · 3:00',
     tagline: 'Знайди якомога більше слів на дошці 4×4 за три хвилини.',
     lang: 'Мова гри', play: 'Грати', how: 'Як грати', stats: 'Статистика', sound: 'Звук',
     about: 'Про гру', ok: 'OK', mb_game: 'Гра', mb_help: 'Довідка',
@@ -51,7 +52,8 @@ const T = {
     missed: 'Можна було скласти', no_words: 'Жодного слова', loading: 'Завантаження словника…',
     s_lang: 'Мова', s_games: 'Ігор зіграно', s_best: 'Рекорд', s_words: 'Слів знайдено', s_longest: 'Найдовше слово',
     controls: 'Керування',
-    about_desc: 'Гра у слова в стилі старих настільних програм. На дошці 4×4 — випадкові літери; за 3 хвилини склади якнайбільше слів, з’єднуючи сусідні плитки. Українська та англійська — окремі режими зі своїми словниками.',
+    about_desc: 'Гра у слова в стилі кібер-необруталізму. На дошці 4×4 — випадкові літери; за 3 хвилини склади якнайбільше слів, з’єднуючи сусідні плитки. Українська та англійська — окремі режими зі своїми словниками.',
+    about_ai: 'Гру створено за допомогою ШІ (Claude).',
     about_controls: [
       'Миша: затисни на літері й тягни по сусідніх плитках, відпусти — слово перевіряється.',
       'Сенсор: так само пальцем; або торкайся плиток по одній, а потім «Готово» чи ще раз остання плитка.',
@@ -60,7 +62,8 @@ const T = {
     about_dict: 'Словники: ВЕСУМ (brown-uk/dict_uk, CC BY-NC-SA 4.0; лише початкові форми слів) та ENABLE (public domain). Працює офлайн.'
   },
   en: {
-    app_name: 'WordShaker 98',
+    app_name: 'WordShaker',
+    kicker: '// word game · 4×4 · 3:00',
     tagline: 'Find as many words as you can on a 4×4 board in three minutes.',
     lang: 'Game language', play: 'Play', how: 'How to play', stats: 'Statistics', sound: 'Sound',
     about: 'About', ok: 'OK', mb_game: 'Game', mb_help: 'Help',
@@ -86,7 +89,8 @@ const T = {
     missed: 'You could have found', no_words: 'No words', loading: 'Loading dictionary…',
     s_lang: 'Language', s_games: 'Games played', s_best: 'Best score', s_words: 'Words found', s_longest: 'Longest word',
     controls: 'Controls',
-    about_desc: 'A word game styled like a late-90s desktop app. The 4×4 board shows random letters; you have 3 minutes to build as many words as possible by connecting adjacent tiles. Ukrainian and English are separate modes with their own dictionaries.',
+    about_desc: 'A word game in a cyber neo-brutalist style. The 4×4 board shows random letters; you have 3 minutes to build as many words as possible by connecting adjacent tiles. Ukrainian and English are separate modes with their own dictionaries.',
+    about_ai: 'Made with the help of AI (Claude).',
     about_controls: [
       'Mouse: press on a letter and drag across adjacent tiles, release to submit.',
       'Touch: the same with a finger; or tap tiles one by one, then “Submit” or tap the last tile again.',
@@ -477,6 +481,7 @@ const UI = {
     const ul = $('about-controls'); ul.innerHTML = '';
     for (const c of t('about_controls')) { const li = document.createElement('li'); li.textContent = c; ul.appendChild(li); }
     $('about-dict').textContent = t('about_dict');
+    $('about-ai').textContent = t('about_ai');
     const heroBest = $('hero-best');   // optional badge — may be removed from the markup
     if (heroBest) heroBest.textContent = STORAGE.data.stats[UI_LANG].best;
     this.renderHero();
@@ -498,7 +503,8 @@ const UI = {
       const on = preset.path.includes(i);
       const grp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       grp.setAttribute('class', 'h-cell'); grp.style.setProperty('--i', i);
-      grp.innerHTML = `<rect class="h-tile${on ? ' on' : ''}" x="${x}" y="${y}" width="${sz}" height="${sz}" rx="2"/>` +
+      grp.innerHTML = (on ? '' : `<rect class="h-sh" x="${x + 4}" y="${y + 4}" width="${sz}" height="${sz}"/>`) +
+        `<rect class="h-tile${on ? ' on' : ''}" x="${x}" y="${y}" width="${sz}" height="${sz}"/>` +
         `<text class="h-let" x="${x + sz / 2}" y="${y + sz / 2 + 1}">${ch.toUpperCase()}</text>`;
       g.appendChild(grp);
     });

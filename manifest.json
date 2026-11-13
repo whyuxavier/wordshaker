@@ -1,15 +1,20 @@
 {
-  "name": "WordShaker 98",
+  "name": "WordShaker",
   "short_name": "WordShaker",
-  "description": "Word game on a 4x4 board — Ukrainian & English. Retro desktop style.",
+  "description": "Word game on a 4x4 board — Ukrainian & English. Cyber neo-brutalist style.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#008080",
-  "theme_color": "#008080",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
   "lang": "uk",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }

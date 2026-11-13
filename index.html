@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>WordShaker 98</title>
-<meta name="description" content="Гра у слова на дошці 4×4 у стилі Windows 98. Українська та англійська.">
-<meta name="theme-color" content="#008080">
+<title>WordShaker</title>
+<meta name="description" content="Гра у слова на дошці 4×4 у стилі кібер-необруталізму. Українська та англійська.">
+<meta name="theme-color" content="#0a0a0f">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23008080'/%3E%3Crect x='2' y='2' width='28' height='7' fill='%23000080'/%3E%3Crect x='24' y='3' width='5' height='5' fill='%23c0c0c0'/%3E%3Crect x='4' y='11' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='14' y='11' width='8' height='8' fill='%23000080'/%3E%3Crect x='4' y='21' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='14' y='21' width='8' height='8' fill='%23e8e8e8'/%3E%3Crect x='24' y='11' width='5' height='8' fill='%23e8e8e8'/%3E%3Crect x='24' y='21' width='5' height='8' fill='%23e8e8e8'/%3E%3Crect x='18' y='15' width='4' height='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0f'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' fill='none' stroke='%23c6ff00' stroke-width='3'/%3E%3Crect x='7' y='7' width='8' height='8' fill='%23ff2bd6'/%3E%3Crect x='18' y='7' width='8' height='8' fill='%23ededf2'/%3E%3Crect x='7' y='18' width='8' height='8' fill='%23ededf2'/%3E%3Crect x='18' y='18' width='8' height='8' fill='%23c6ff00'/%3E%3Cpath d='M11 11L22 22' stroke='%2300e5ff' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Unbounded:wght@700;900&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,18 +21,15 @@
   <section class="window screen" id="scr-menu" data-screen="menu">
     <div class="titlebar">
       <span class="tb-icon"></span>
-      <span class="tb-title" data-i18n="app_name">WordShaker 98</span>
+      <span class="tb-title" data-i18n="app_name">WordShaker</span>
       <span class="tb-btns">
         <button class="tb-btn" id="btn-about" data-i18n-title="about" title="Про гру"><span class="ico-info">i</span></button>
-        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-min"></span></button>
-        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-max"></span></button>
-        <button class="tb-btn tb-close" tabindex="-1" aria-hidden="true"><span class="ico-x"></span></button>
       </span>
     </div>
-    <div class="menubar"><span data-i18n="mb_game">Гра</span><span data-i18n="mb_help">Довідка</span></div>
     <div class="win-body menu-body">
       <div class="menu-left">
-        <h1 class="logo"><span data-i18n="app_name">WordShaker 98</span></h1>
+        <p class="kicker" data-i18n="kicker">// гра у слова · 4×4 · 3:00</p>
+        <h1 class="logo"><span data-i18n="app_name">WordShaker</span></h1>
         <p class="tagline" data-i18n="tagline">Знайди якомога більше слів на дошці 4×4 за три хвилини.</p>
 
         <fieldset class="group">
@@ -40,7 +40,7 @@
 
         <div class="menu-btns">
           <button class="btn primary big" id="btn-play"><span class="pi pi-play"></span><span data-i18n="play">Грати</span></button>
-          <button class="btn" id="btn-how"><svg class="pi" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="#000080"/><path d="M4.2 4.6a1.8 1.8 0 1 1 2.6 1.6c-.6.3-.8.6-.8 1.2" fill="none" stroke="#fff" stroke-width="1.4"/><rect x="5.3" y="8.4" width="1.4" height="1.4" fill="#fff"/></svg><span data-i18n="how">Як грати</span></button>
+          <button class="btn" id="btn-how"><svg class="pi" viewBox="0 0 12 12" aria-hidden="true"><rect x="0.75" y="0.75" width="10.5" height="10.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4.3 4.6a1.7 1.7 0 1 1 2.5 1.5c-.6.3-.8.6-.8 1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="5.3" y="8.2" width="1.4" height="1.4" fill="currentColor"/></svg><span data-i18n="how">Як грати</span></button>
           <button class="btn" id="btn-stats"><span class="pi pi-stats"></span><span data-i18n="stats">Статистика</span></button>
         </div>
         <label class="check"><input type="checkbox" id="chk-sound"><span class="box"></span><span data-i18n="sound">Звук</span></label>
@@ -50,28 +50,29 @@
         <div class="hero" id="hero">
           <svg class="hero-svg" viewBox="0 0 320 348" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
-              <linearGradient id="tbgrad" x1="0" x2="1"><stop offset="0" stop-color="#000080"/><stop offset="1" stop-color="#1084d0"/></linearGradient>
+              <pattern id="h-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" class="h-scanline"/></pattern>
             </defs>
-            <!-- window frame -->
+            <!-- terminal frame with hard offset shadow -->
             <g class="h-win">
-              <rect x="22" y="30" width="276" height="310" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
-              <rect x="24" y="32" width="272" height="306" fill="none" stroke="#fff" stroke-width="2"/>
-              <rect x="26" y="34" width="268" height="302" fill="none" stroke="#808080" stroke-width="2"/>
-              <rect x="28" y="36" width="264" height="18" fill="url(#tbgrad)"/>
-              <rect x="32" y="40" width="10" height="10" fill="#c0c0c0"/><rect x="34" y="42" width="6" height="6" fill="#000080"/>
-              <text x="48" y="49" class="h-tbtext" id="hero-title">WordShaker 98</text>
-              <rect x="258" y="39" width="12" height="12" fill="#c0c0c0" stroke="#000"/><rect x="261" y="48" width="6" height="2" fill="#000"/>
-              <rect x="272" y="39" width="12" height="12" fill="#c0c0c0" stroke="#000"/><rect x="274" y="41" width="8" height="8" fill="none" stroke="#000" stroke-width="1.5"/>
+              <rect x="30" y="38" width="276" height="306" class="h-shadow"/>
+              <rect x="22" y="30" width="276" height="306" class="h-frame"/>
+              <rect x="22" y="30" width="276" height="306" fill="url(#h-scan)"/>
+              <rect x="22" y="30" width="276" height="24" class="h-bar"/>
+              <line x1="22" y1="54" x2="298" y2="54" class="h-rule"/>
+              <rect x="30" y="37" width="10" height="10" class="h-mark"/>
+              <text x="48" y="47" class="h-tbtext" id="hero-title">WordShaker</text>
+              <rect x="256" y="37" width="10" height="10" class="h-dot-m"/>
+              <rect x="272" y="37" width="10" height="10" class="h-dot-c"/>
             </g>
-            <!-- timer + score panel -->
+            <!-- timer + current word -->
             <g class="h-panel">
-              <rect x="34" y="60" width="86" height="22" fill="#000" stroke="#808080"/>
-              <text x="40" y="76" class="h-lcd">3:00</text>
-              <rect x="128" y="60" width="158" height="22" fill="#fff" stroke="#808080"/>
-              <text x="136" y="76" class="h-word" id="hero-word">СЛОВО</text>
+              <rect x="34" y="62" width="86" height="24" class="h-box"/>
+              <text x="44" y="79" class="h-lcd">3:00</text>
+              <rect x="128" y="62" width="158" height="24" class="h-box h-box-word"/>
+              <text x="136" y="79" class="h-word" id="hero-word">СЛОВО</text>
             </g>
-            <!-- path (under tiles: visible only in the gaps) -->
-            <polyline class="h-path" id="hero-path" fill="none" stroke="#000080" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" points=""/>
+            <!-- path (under tiles: visible in the gaps) -->
+            <polyline class="h-path" id="hero-path" fill="none" stroke-width="10" stroke-linejoin="miter" stroke-linecap="square" points=""/>
             <!-- 4x4 tiles -->
             <g class="h-grid" id="hero-grid"></g>
           </svg>
@@ -96,9 +97,10 @@
       <div class="tabpanel" id="tab-rules">
         <ol class="rules" id="rules-list"></ol>
         <svg class="dirs" viewBox="0 0 120 120" aria-hidden="true">
-          <g fill="#e8e8e8" stroke="#808080"><rect x="5" y="5" width="34" height="34"/><rect x="43" y="5" width="34" height="34"/><rect x="81" y="5" width="34" height="34"/><rect x="5" y="43" width="34" height="34"/><rect x="43" y="43" width="34" height="34" fill="#000080"/><rect x="81" y="43" width="34" height="34"/><rect x="5" y="81" width="34" height="34"/><rect x="43" y="81" width="34" height="34"/><rect x="81" y="81" width="34" height="34"/></g>
-          <g stroke="#000080" stroke-width="3" stroke-linecap="round"><line x1="60" y1="60" x2="60" y2="22"/><line x1="60" y1="60" x2="60" y2="98"/><line x1="60" y1="60" x2="22" y2="60"/><line x1="60" y1="60" x2="98" y2="60"/><line x1="60" y1="60" x2="22" y2="22"/><line x1="60" y1="60" x2="98" y2="22"/><line x1="60" y1="60" x2="22" y2="98"/><line x1="60" y1="60" x2="98" y2="98"/></g>
-          <circle cx="60" cy="60" r="7" fill="#fff" stroke="#000080" stroke-width="3"/>
+          <g class="d-tile"><rect x="5" y="5" width="34" height="34"/><rect x="43" y="5" width="34" height="34"/><rect x="81" y="5" width="34" height="34"/><rect x="5" y="43" width="34" height="34"/><rect x="81" y="43" width="34" height="34"/><rect x="5" y="81" width="34" height="34"/><rect x="43" y="81" width="34" height="34"/><rect x="81" y="81" width="34" height="34"/></g>
+          <rect x="43" y="43" width="34" height="34" class="d-on"/>
+          <g class="d-ray" stroke-width="3" stroke-linecap="square"><line x1="60" y1="60" x2="60" y2="22"/><line x1="60" y1="60" x2="60" y2="98"/><line x1="60" y1="60" x2="22" y2="60"/><line x1="60" y1="60" x2="98" y2="60"/><line x1="60" y1="60" x2="22" y2="22"/><line x1="60" y1="60" x2="98" y2="22"/><line x1="60" y1="60" x2="22" y2="98"/><line x1="60" y1="60" x2="98" y2="98"/></g>
+          <rect x="54" y="54" width="12" height="12" class="d-core"/>
         </svg>
       </div>
       <div class="tabpanel" id="tab-score" hidden>
@@ -128,7 +130,8 @@
       <h3 data-i18n="controls">Керування</h3>
       <ul id="about-controls"></ul>
       <p class="small" id="about-dict"></p>
-      <p><a class="gh" href="https://github.com/whyuxavier/wordshaker" target="_blank" rel="noopener"><span class="pi pi-star"></span> GitHub</a></p>
+      <p><a class="gh" href="https://github.com/whyuxavier/wordshaker" target="_blank" rel="noopener"><span class="pi pi-star"></span> GitHub · whyuxavier/wordshaker</a></p>
+      <p class="small ai-note" id="about-ai">Гру створено за допомогою ШІ (Claude).</p>
       <div class="dlg-btns"><button class="btn close-dialog" data-i18n="ok">OK</button></div>
     </div>
   </section>
@@ -137,10 +140,9 @@
   <section class="window screen" id="scr-game" data-screen="game" hidden>
     <div class="titlebar">
       <span class="tb-icon"></span>
-      <span class="tb-title"><span data-i18n="app_name">WordShaker 98</span> — <span id="game-lang-title">UA</span></span>
+      <span class="tb-title"><span data-i18n="app_name">WordShaker</span> — <span id="game-lang-title">UA</span></span>
       <span class="tb-btns">
         <button class="tb-btn" id="btn-about2" data-i18n-title="about" title="Про гру"><span class="ico-info">i</span></button>
-        <button class="tb-btn" tabindex="-1" aria-hidden="true"><span class="ico-min"></span></button>
         <button class="tb-btn tb-close" id="btn-game-close" data-i18n-title="to_menu" title="У меню"><span class="ico-x"></span></button>
       </span>
     </div>
@@ -216,7 +218,7 @@
   <div class="overlay" id="overlay" hidden></div>
 
   <div class="taskbar">
-    <button class="btn start" id="btn-start"><span class="start-logo"></span><span data-i18n="app_name">WordShaker 98</span></button>
+    <button class="btn start" id="btn-start"><span class="start-logo"></span><span data-i18n="app_name">WordShaker</span></button>
     <span class="task-sep"></span>
     <span class="task-btn" id="task-cur"></span>
     <span class="spacer"></span>
